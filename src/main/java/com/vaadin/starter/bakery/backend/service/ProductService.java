@@ -60,15 +60,25 @@ public class ProductService implements FilterableCrudService<Product> {
    
     }
     
-	@Override
+    
+    @Override
 	public Page<Product> findAnyMatching(Optional<String> filter, Pageable pageable) {
-		// TODO Auto-generated method stub
-		return null;
+		if (filter.isPresent()) {
+			String repositoryFilter = "%" + filter.get() + "%";
+			return productRepository.findByNameLikeIgnoreCase(repositoryFilter, pageable);
+		} else {
+			return find(pageable);
+		}
 	}
-	@Override
+	
+    @Override
 	public long countAnyMatching(Optional<String> filter) {
-		// TODO Auto-generated method stub
-		return 0;
+		if (filter.isPresent()) {
+			String repositoryFilter = "%" + filter.get() + "%";
+			return productRepository.countByNameLikeIgnoreCase(repositoryFilter);
+		} else {
+			return count();
+		}
 	}
 
 }
