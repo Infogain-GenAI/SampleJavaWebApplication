@@ -12,7 +12,12 @@ import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.starter.bakery.app.security.CurrentUser;
+import com.vaadin.starter.bakery.backend.data.OrderState;
+import com.vaadin.starter.bakery.backend.data.entity.Inventory;
 import com.vaadin.starter.bakery.backend.data.entity.Order;
+import com.vaadin.starter.bakery.backend.data.entity.OrderItem;
+import com.vaadin.starter.bakery.backend.repositories.InventoryRepository;
+import com.vaadin.starter.bakery.backend.service.InventoryService;
 import com.vaadin.starter.bakery.backend.service.OrderService;
 import com.vaadin.starter.bakery.ui.crud.EntityPresenter;
 import com.vaadin.starter.bakery.ui.dataproviders.OrdersGridDataProvider;
@@ -32,14 +37,19 @@ public class OrderPresenter {
 	private final OrdersGridDataProvider dataProvider;
 	private final CurrentUser currentUser;
 	private final OrderService orderService;
+	private final InventoryService inventoryService;
+	InventoryRepository inventoryRepository;
 
 	@Autowired
 	OrderPresenter(OrderService orderService, OrdersGridDataProvider dataProvider,
-			EntityPresenter<Order, StorefrontView> entityPresenter, CurrentUser currentUser) {
+			EntityPresenter<Order, StorefrontView> entityPresenter, CurrentUser currentUser,
+			InventoryRepository inventoryRepository, InventoryService inventoryService) {
 		this.orderService = orderService;
 		this.entityPresenter = entityPresenter;
 		this.dataProvider = dataProvider;
 		this.currentUser = currentUser;
+		this.inventoryRepository = inventoryRepository;
+		this.inventoryService = inventoryService;
 		headersGenerator = new OrderCardHeaderGenerator();
 		headersGenerator.resetHeaderChain(false);
 		dataProvider.setPageObserver(p -> headersGenerator.ordersRead(p.getContent()));
@@ -116,6 +126,22 @@ public class OrderPresenter {
 				dataProvider.refreshAll();
 			} else {
 				view.showUpdatedNotification();
+				String state = entityPresenter.getEntity().getState().toString();
+				List<OrderItem> s =	entityPresenter.getEntity().getItems();
+				
+				for(int i=0 ; i<s.size();i++) {
+				List<Inventory> li = inventoryService.findAllInventory(s.get(i).getProduct().getName());
+				int stockValue = li.get(0).getInStock()-s.get(i).getQuantity();
+				Integer inProcess =  s.get(i).getQuantity();
+				if(state.equals("DELIVERED") || state.equals("CANCELLED")) {
+					inProcess = 0;
+					
+				}
+				if( state.equals("CANCELLED")) {
+					stockValue = li.get(0).getInStock()+s.get(i).getQuantity();
+				}
+				inventoryRepository.update(s.get(i).getProduct().getName(),inProcess,stockValue);
+				}	
 				dataProvider.refreshItem(e);
 			}
 			close();

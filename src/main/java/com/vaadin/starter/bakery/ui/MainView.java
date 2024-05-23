@@ -30,6 +30,7 @@ import com.vaadin.flow.server.VaadinServletRequest;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.starter.bakery.ui.utils.BakeryConst;
 import com.vaadin.starter.bakery.ui.views.HasConfirmation;
+import com.vaadin.starter.bakery.ui.views.admin.inventory.InventoryView;
 import com.vaadin.starter.bakery.ui.views.admin.products.ProductsView;
 import com.vaadin.starter.bakery.ui.views.admin.users.UsersView;
 import com.vaadin.starter.bakery.ui.views.dashboard.DashboardView;
@@ -126,6 +127,9 @@ public class MainView extends AppLayout {
 				VaadinServletRequest.getCurrent().getHttpServletRequest())) {
 			tabs.add(createTab(VaadinIcon.CALENDAR, TITLE_PRODUCTS, ProductsView.class));
 		}
+		
+		tabs.add(createTab(VaadinIcon.LIST, "Inventory", InventoryView.class));
+		
 		final String contextPath = VaadinServlet.getCurrent().getServletContext().getContextPath();
 		final Tab logoutTab = createTab(createLogoutLink(contextPath));
 		logoutTab.setId("logout-tab");

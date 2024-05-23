@@ -20,11 +20,13 @@ import com.vaadin.starter.bakery.backend.data.OrderState;
 import com.vaadin.starter.bakery.backend.data.Role;
 import com.vaadin.starter.bakery.backend.data.entity.Customer;
 import com.vaadin.starter.bakery.backend.data.entity.HistoryItem;
+import com.vaadin.starter.bakery.backend.data.entity.Inventory;
 import com.vaadin.starter.bakery.backend.data.entity.Order;
 import com.vaadin.starter.bakery.backend.data.entity.OrderItem;
 import com.vaadin.starter.bakery.backend.data.entity.PickupLocation;
 import com.vaadin.starter.bakery.backend.data.entity.Product;
 import com.vaadin.starter.bakery.backend.data.entity.User;
+import com.vaadin.starter.bakery.backend.repositories.InventoryRepository;
 import com.vaadin.starter.bakery.backend.repositories.OrderRepository;
 import com.vaadin.starter.bakery.backend.repositories.PickupLocationRepository;
 import com.vaadin.starter.bakery.backend.repositories.ProductRepository;
@@ -46,21 +48,25 @@ public class DataGenerator implements HasLogger {
 			"Mcbride", "Leblanc", "Russell", "Carver", "Benton", "Maldonado", "Lyons" };
 
 	private final Random random = new Random(1L);
+	
+	List<Product> productsForInv  = new ArrayList<>();
 
 	private OrderRepository orderRepository;
 	private UserRepository userRepository;
 	private ProductRepository productRepository;
 	private PickupLocationRepository pickupLocationRepository;
+	private InventoryRepository inventoryRepository;
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
 	public DataGenerator(OrderRepository orderRepository, UserRepository userRepository,
-			ProductRepository productRepository, PickupLocationRepository pickupLocationRepository,
+			ProductRepository productRepository, PickupLocationRepository pickupLocationRepository,InventoryRepository inventoryRepository,
 			PasswordEncoder passwordEncoder) {
 		this.orderRepository = orderRepository;
 		this.userRepository = userRepository;
 		this.productRepository = productRepository;
 		this.pickupLocationRepository = pickupLocationRepository;
+		this.inventoryRepository = inventoryRepository;
 		this.passwordEncoder = passwordEncoder;
 	}
 
@@ -86,6 +92,13 @@ public class DataGenerator implements HasLogger {
 		// A set of products without relationships that can be deleted
 		createProducts(productRepository, 4);
 
+		getLogger().info("... generating Inventory");
+		// A set of products that will be used for creating orders.
+		Supplier<Inventory> createInventory = createInventory(inventoryRepository, 8);
+		// A set of products without relationships that can be deleted
+	//	createInventory(inventoryRepository, 4);
+		
+		
 		getLogger().info("... generating pickup locations");
 		Supplier<PickupLocation> pickupLocationSupplier = createPickupLocations(pickupLocationRepository);
 
@@ -292,9 +305,11 @@ public class DataGenerator implements HasLogger {
 		for (int i = 0; i < numberOfItems; i++) {
 			Product product = new Product();
 			product.setName(getRandomProductName());
+			//product.setQuantity(100);
 			double doublePrice = 2.0 + random.nextDouble() * 100.0;
 			product.setPrice((int) (doublePrice * 100.0));
 			products.add(productsRepo.save(product));
+			productsForInv.add(product);
 		}
 		return () -> {
 			double cutoff = 2.5;
@@ -307,6 +322,30 @@ public class DataGenerator implements HasLogger {
 		};
 	}
 
+	
+	private Supplier<Inventory> createInventory(InventoryRepository inventoryRepo, int numberOfItems) {
+		List<Inventory> inventories  = new ArrayList<>();
+		for (Product pr:productsForInv) {
+			Inventory inventory = new Inventory();
+			inventory.setName(pr.getName());
+			inventory.setInStock(100);
+			inventory.setInProcess(0);
+			double doublePrice = 2.0 + random.nextDouble() * 100.0;
+			inventory.setPrice(pr.getPrice());
+			inventories.add(inventoryRepo.save(inventory));
+		}
+	
+		return () -> {
+			double cutoff = 2.5;
+			double g = random.nextGaussian();
+			g = Math.min(cutoff, g);
+			g = Math.max(-cutoff, g);
+			g += cutoff;
+			g /= (cutoff * 2.0);
+			return inventories.get((int) (g * (inventories.size() - 1)));
+		};
+	}
+	
 	private String getRandomProductName() {
 		String firstFilling = getRandom(FILLING);
 		String name;
