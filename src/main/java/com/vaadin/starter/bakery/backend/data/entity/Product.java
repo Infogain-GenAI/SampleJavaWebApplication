@@ -1,3 +1,4 @@
+
 package com.vaadin.starter.bakery.backend.data.entity;
 
 import jakarta.persistence.Column;
@@ -16,6 +17,7 @@ public class Product extends AbstractEntity {
 	@Column(unique = true)
 	private String name;
 
+	
 	// Real price * 100 as an int to avoid rounding errors
 	@Min(value = 0, message = "{bakery.price.limits}")
 	@Max(value = 100000, message = "{bakery.price.limits}")
@@ -28,6 +30,8 @@ public class Product extends AbstractEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	
 
 	public Integer getPrice() {
 		return price;
@@ -54,7 +58,7 @@ public class Product extends AbstractEntity {
 			return false;
 		}
 		Product that = (Product) o;
-		return Objects.equals(name, that.name) &&
+		return Objects.equals(name, that.name) && 
 				Objects.equals(price, that.price);
 	}
 
