@@ -15,7 +15,6 @@ jobs:
         id: JavaAutoReviewer
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
           azure_openai_api_key: ${{ secrets.AZURE_OPENAI_API_KEY }}
           azure_openai_api_instance_name: ${{ secrets.AZURE_OPENAI_API_INSTANCE_NAME }}
           azure_openai_api_deployment_name: ${{ secrets.AZURE_OPENAI_API_DEPLOYMENT_NAME }}
