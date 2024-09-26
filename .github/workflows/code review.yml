@@ -20,4 +20,4 @@ jobs:
           azure_openai_api_deployment_name: ${{ secrets.AZURE_OPENAI_API_DEPLOYMENT_NAME }}
           azure_openai_api_version: ${{ secrets.AZURE_OPENAI_API_VERSION }}
           model_name: ${{ secrets.MODEL_NAME }}
-          exclude_files: '*.json, *.md, *.yml, *.razor'
+          exclude_files: '*.json, *.md, *.razor'
