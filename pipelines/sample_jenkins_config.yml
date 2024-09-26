@@ -15,7 +15,7 @@ develop:
   space: development
   profile: cloud
   appdAgentAppName : OFFICE-L1
-  appdAgentTierName: DXO-document-cxs-1234567
+  appdAgentTierName: DXO-cxs-1234567
   appdPlan: sample1-test
   instances: 1
   configServerHostName: https://configuration-service-dev
