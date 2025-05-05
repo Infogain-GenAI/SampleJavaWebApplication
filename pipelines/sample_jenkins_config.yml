@@ -1,0 +1,71 @@
+pamId: 98765432
+eai: 1234567
+artifactName: DXO-document-cxs
+name: document-cxs
+sonar_project_name: DXO-DOC-Document-CXS
+appName: document-cxs
+git_service_acct: DXS_app1234567_src_git
+levels:
+  - develop
+  - release
+  - staging
+  - production
+develop:
+  alias: dev
+  space: development
+  profile: cloud
+  appdAgentAppName : OFFICE-L1
+  appdAgentTierName: DXO-cxs-1234567
+  appdPlan: sample1-test
+  instances: 1
+  configServerHostName: https://configuration-service-dev
+  manifest: manifest.yml
+  integrationTestProperties: "-Dconfig.file=dev-inc.properties"
+  dataCenters:
+    - DEVELOP-DELTA1
+    - DEVELOP-DELTA2
+    - DEVELOP-DELTA3
+release:
+  alias: test
+  space: release
+  profile: cloud
+  appdAgentAppName : OFFICE-L3
+  appdAgentTierName: DXO-document-cxs-1234567
+  appdPlan: sample1-test
+  instances: 1
+  configServerHostName: https://configuration-service-test
+  manifest: manifest.yml
+  integrationTestProperties: "-Dconfig.file=dev-uat.properties"
+  dataCenters:
+    - DEVELOP-DELTA1
+    - DEVELOP-DELTA2
+    - DEVELOP-DELTA3
+    - DEVELOP-CINCINNATI1-AZ1
+    - DEVELOP-CINCINNATI1-AZ2
+    - DEVELOP_CINCINNATI1-AZ3
+pcf:
+  DEVELOP-DELTA1:
+    url: https://api.DEVELOP-DELTA1.sample.com
+    domain: app.DEVELOP-DELTA1.sample.com
+    foundation: DEVELOP-DELTA1
+  DEVELOP-DELTA2:
+    url: https://api.DEVELOP-DELTA2.sample.com
+    domain: app.DEVELOP-DELTA2.sample.com
+    foundation: DEVELOP-DELTA2
+  DEVELOP-DELTA3:
+    url: https://api.DEVELOP-DELTA3.sample.com
+    domain: app.DEVELOP-DELTA3.sample.com
+    foundation: DEVELOP-DELTA3
+  DEVELOP-CINCINNATI1-AZ1:
+    url: https://api.DEVELOP-CINCINNATI1-az1.sample.com
+    domain: app.DEVELOP-CINCINNATI1-az1.sample.com
+    foundation: DEVELOP-CINCINNATI1-az1
+  DEVELOP-CINCINNATI1-AZ2:
+    url: https://api.DEVELOP-CINCINNATI1-az2.sample.com
+    domain: app.DEVELOP-CINCINNATI1-az2.sample.com
+    foundation: DEVELOP-CINCINNATI1-az2
+  DEVELOP-CINCINNATI1-AZ3:
+    url: https://api.DEVELOP-CINCINNATI1-az3.sample.com
+    domain: app.DEVELOP-CINCINNATI1-az3.sample.com
+    foundation: DEVELOP-CINCINNATI1-az3
+  DEV_GSLB_DOMAIN: devapp.sample.com

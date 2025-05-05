@@ -118,15 +118,14 @@ public class MainView extends AppLayout {
 	private Tab[] getAvailableTabs() {
 		final List<Tab> tabs = new ArrayList<>(4);
 		tabs.add(createTab(VaadinIcon.EDIT, TITLE_STOREFRONT, StorefrontView.class));
-//		tabs.add(createTab(VaadinIcon.CLOCK, TITLE_DASHBOARD, DashboardView.class));
-//		if (accessChecker.hasAccess(UsersView.class,
-//				VaadinServletRequest.getCurrent().getHttpServletRequest())) {
-//			tabs.add(createTab(VaadinIcon.USER, TITLE_USERS, UsersView.class));
-//		}
-//		if (accessChecker.hasAccess(ProductsView.class,
-//				VaadinServletRequest.getCurrent().getHttpServletRequest())) {
-//			tabs.add(createTab(VaadinIcon.CALENDAR, TITLE_PRODUCTS, ProductsView.class));
-//		}
+		if (accessChecker.hasAccess(UsersView.class,
+				VaadinServletRequest.getCurrent().getHttpServletRequest())) {
+			tabs.add(createTab(VaadinIcon.USER, TITLE_USERS, UsersView.class));
+		}
+		if (accessChecker.hasAccess(ProductsView.class,
+				VaadinServletRequest.getCurrent().getHttpServletRequest())) {
+			tabs.add(createTab(VaadinIcon.CALENDAR, TITLE_PRODUCTS, ProductsView.class));
+		}
 		final String contextPath = VaadinServlet.getCurrent().getServletContext().getContextPath();
 		final Tab logoutTab = createTab(createLogoutLink(contextPath));
 		logoutTab.setId("logout-tab");

@@ -17,6 +17,7 @@ public class Product extends AbstractEntity {
 	@Column(unique = true)
 	private String name;
 
+	
 	// Real price * 100 as an int to avoid rounding errors
 	@Min(value = 0, message = "{bakery.price.limits}")
 	@Max(value = 100000, message = "{bakery.price.limits}")
@@ -29,6 +30,8 @@ public class Product extends AbstractEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	
 
 	public Integer getPrice() {
 		return price;
